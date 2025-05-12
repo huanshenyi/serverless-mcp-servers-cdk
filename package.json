@@ -8,7 +8,9 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "deploy": "npm run build && cdk deploy --region us-east-1",
+    "deploy:us-east-1": "npm run build && cdk deploy --region us-east-1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",

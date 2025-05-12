@@ -38,6 +38,15 @@ node src/js/mcpserver/index.js
 node src/js/mcpclient/index.js
 ```
 
+Claude & Cursor クライアントでテスト
+
+```json
+    "example-local": {
+      "command": "/path/to/npx",
+      "args": ["mcp-remote", "http://localhost:3000/mcp"]
+    }
+```
+
 ### 4. AWS へのデプロイ
 
 以下のいずれかの方法でデプロイできます:
@@ -73,6 +82,18 @@ cdk deploy --region us-east-1
 ```bash
 export MCP_SERVER_ENDPOINT=$(aws cloudformation describe-stacks --stack-name ServerlessMcpServersCdkStack --region us-east-1 --query "Stacks[0].Outputs[?OutputKey=='McpEndpoint'].OutputValue" --output text)
 node src/js/mcpclient/index.js
+```
+
+## Claude & Cursor クライアントでテスト
+
+```
+    "example-remote": {
+      "command": "/path/to/npx",
+      "args": [
+        "mcp-remote",
+        "https://{{OutputValue}}.execute-api.us-east-1.amazonaws.com/dev/mcp"
+      ]
+    }
 ```
 
 ## 認証機能

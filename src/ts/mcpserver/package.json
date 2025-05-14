@@ -6,7 +6,7 @@
   "description": "A sample hono stateless MCP Server running on AWS Lambda",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "node build.js",
     "start": "node dist/index.js"
   },
   "dependencies": {

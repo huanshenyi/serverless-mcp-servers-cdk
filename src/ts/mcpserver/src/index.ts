@@ -92,6 +92,28 @@ const getServer = () => {
     }
   );
 
+  // pingツールを移植するためのコードを追加
+  let SHORT_DELAY = false;
+  const SHORT_DELAY_MS = 100;
+  const LONG_DELAY_MS = 1000;
+  server.tool("ping", async () => {
+    const startTime = Date.now();
+    SHORT_DELAY=!SHORT_DELAY;
+    const delay = SHORT_DELAY ? SHORT_DELAY_MS : LONG_DELAY_MS;
+    const sleep = (ms: number) =>
+      new Promise((resolve) => setTimeout(resolve, ms));
+    await sleep(delay);
+    const endTime = Date.now();
+    return {
+      content: [
+        {
+          type: "text",
+          text: `Ping response time: ${endTime - startTime}ms`,
+        },
+      ],
+    };
+  });
+
   // Create a simple resource at a fixed URI
   server.resource(
     "greeting-resource",

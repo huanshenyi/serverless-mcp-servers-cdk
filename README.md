@@ -24,12 +24,25 @@ npm install
 (cd src/js/mcpserver && npm install)
 ```
 
+#### Hono
+
+```bash
+(cd src/js/mcpclient && npm install)
+(cd src/ts/mcpserver && npm install)
+```
+
 ### 3. ローカルでのテスト
 
 MCP サーバーをローカルで実行:
 
 ```bash
 node src/js/mcpserver/index.js
+```
+
+#### Hono
+
+```bash
+(cd src/ts/mcpserver && npm run dev)
 ```
 
 別のターミナルウィンドウでクライアントを実行:
@@ -67,6 +80,24 @@ npm run deploy
 
 ```bash
 npm run build
+cdk deploy --region us-east-1
+```
+
+#### Hono 製の MCP サーバーのデプロイ
+
+```bash
+(cd src/ts/mcpserver && npm run build)
+```
+
+lib/serverless-mcp-servers-cdk-stack.ts
+
+```typescript
+      code: lambda.Code.fromAsset(path.join(__dirname, "../src/ts/mcpserver/dist")), // Hono
+```
+
+メインディレクトリに戻って
+
+```bash
 cdk deploy --region us-east-1
 ```
 

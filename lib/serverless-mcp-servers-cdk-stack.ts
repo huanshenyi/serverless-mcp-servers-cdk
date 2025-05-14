@@ -1,9 +1,9 @@
 import * as cdk from "aws-cdk-lib";
-import { Construct } from "constructs";
+import type { Construct } from "constructs";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import * as iam from "aws-cdk-lib/aws-iam";
-import * as path from "path";
+import * as path from "node:path";
 
 export class ServerlessMcpServersCdkStack extends cdk.Stack {
   public readonly mcpEndpoint: cdk.CfnOutput;
@@ -29,7 +29,8 @@ export class ServerlessMcpServersCdkStack extends cdk.Stack {
       functionName: projectName,
       runtime: lambda.Runtime.NODEJS_22_X,
       handler: "run.sh",
-      code: lambda.Code.fromAsset(path.join(__dirname, "../src/js/mcpserver")),
+      // code: lambda.Code.fromAsset(path.join(__dirname, "../src/js/mcpserver")),   // Express
+      code: lambda.Code.fromAsset(path.join(__dirname, "../src/ts/mcpserver/dist")), // Hono
       role: mcpServerRole,
       memorySize: 512,
       timeout: cdk.Duration.seconds(10),

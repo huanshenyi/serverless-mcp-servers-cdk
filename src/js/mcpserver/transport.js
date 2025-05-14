@@ -26,7 +26,7 @@ const postRequestHandler = async (req, res) => {
         });
 
         res.on('close', () => {
-            l.debug(`request processing complete`);
+            l.debug('request processing complete');
             transport.close();
             newMcpServer.close();
         });

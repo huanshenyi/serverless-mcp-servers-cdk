@@ -7,8 +7,8 @@
 .idea/workspace.xml
 .idea/usage.statistics.xml
 .idea/shelf
-dist/
-
+dist/index.js
+.DS_Store
 # deps
 node_modules/
 

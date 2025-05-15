@@ -62,28 +62,13 @@ Claude & Cursor クライアントでテスト
 
 ### 4. AWS へのデプロイ
 
-以下のいずれかの方法でデプロイできます:
-
-#### 方法 1: デプロイスクリプトを使用
-
 ```bash
-./deploy.sh
-```
-
-#### 方法 2: npm スクリプトを使用
-
-```bash
-npm run deploy
-```
-
-#### 方法 3: CDK コマンドを直接使用
-
-```bash
-npm run build
 cdk deploy --region us-east-1
 ```
 
 #### Hono 製の MCP サーバーのデプロイ
+
+cdk deploy する前にまずは実行ファイルを build
 
 ```bash
 (cd src/ts/mcpserver && npm run build)

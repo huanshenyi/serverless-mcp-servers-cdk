@@ -139,6 +139,43 @@ const getServer = () => {
 
 const app = new Hono();
 
+// Bearer token authentication middleware
+app.use('/mcp', async (c, next) => {
+  const auth = c.req.header('Authorization');
+  if (!auth || !auth.startsWith('Bearer ')) {
+    return c.json({
+      jsonrpc: "2.0",
+      error: {
+        code: -32001,
+        message: "Unauthorized: Bearer token required",
+      },
+      id: null,
+    }, 401);
+  }
+  
+  const token = auth.slice(7);
+  const expectedToken = process.env.MCP_AUTH_TOKEN;
+  
+  if (!expectedToken) {
+    console.warn("MCP_AUTH_TOKEN environment variable not set, authentication disabled");
+    await next();
+    return;
+  }
+  
+  if (token !== expectedToken) {
+    return c.json({
+      jsonrpc: "2.0",
+      error: {
+        code: -32001,
+        message: "Unauthorized: Invalid token",
+      },
+      id: null,
+    }, 401);
+  }
+  
+  await next();
+});
+
 app.post("/mcp", async (c) => {
   const { req, res } = toReqRes(c.req.raw);
 

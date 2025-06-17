@@ -1,7 +1,7 @@
 # Stateless MCP Server on AWS Lambda (CDK 版)
 
 このプロジェクトは、AWS CDK を使用して AWS Lambda と API Gateway 上でステートレスな MCP サーバーを構築します。
-[sample-serverless-mcp-servers](https://github.com/aws-samples/sample-serverless-mcp-servers/tree/main/stateless-mcp-on-lambda)の CDK 移植版で、Express.js と Hono (TypeScript) の2つの実装を提供します。
+[sample-serverless-mcp-servers](https://github.com/aws-samples/sample-serverless-mcp-servers/tree/main/stateless-mcp-on-lambda)の CDK 移植版で、Express.js と Hono (TypeScript) の 2 つの実装を提供します。
 
 ## 前提条件
 
@@ -31,7 +31,7 @@ npm install
 
 ### Hono TypeScript 版のデプロイ (推奨)
 
-現在のCDKスタックはHono版を使用するよう設定されています。
+現在の CDK スタックは Hono 版を使用するよう設定されています。
 
 ```bash
 # 1. Hono MCP サーバーをビルド
@@ -44,9 +44,10 @@ cdk deploy --region us-east-1
 
 ### Express.js 版への切り替え
 
-Express.js版を使用したい場合:
+Express.js 版を使用したい場合:
 
 1. `lib/serverless-mcp-servers-cdk-stack.ts:33` を編集:
+
 ```typescript
 // Hono版 (デフォルト)
 code: lambda.Code.fromAsset(path.join(__dirname, "../src/ts/mcpserver/dist")),
@@ -56,6 +57,7 @@ code: lambda.Code.fromAsset(path.join(__dirname, "../src/js/mcpserver")),
 ```
 
 2. デプロイ:
+
 ```bash
 npm run build
 cdk deploy --region us-east-1
@@ -94,16 +96,17 @@ node src/js/mcpclient/index.js
 
 ```json
 {
-  "example-local": {
-    "command": "/path/to/npx",
-    "args": ["mcp-remote", "http://localhost:3000/mcp"]
+  "servers-local": {
+    "url": "http://localhost:3000/mcp",
+    "headers": {
+      "Authorization": "Bearer YOUR_ACCESS_TOKEN"
+    }
   },
-  "example-remote": {
-    "command": "/path/to/npx",
-    "args": [
-      "mcp-remote",
-      "https://{{OutputValue}}.execute-api.us-east-1.amazonaws.com/dev/mcp"
-    ]
+  "servers-remote": {
+    "url": "https://{{OutputValue}}.execute-api.us-east-1.amazonaws.com/dev/mcp",
+    "headers": {
+      "Authorization": "Bearer YOUR_ACCESS_TOKEN"
+    }
   }
 }
 ```
@@ -111,26 +114,29 @@ node src/js/mcpclient/index.js
 ## ⚠️ 重要な注意点
 
 - **リージョン制限**: 必ず `us-east-1` リージョンにデプロイしてください (Lambda Web Adapter layer の制約)
-- **Honoビルド必須**: Hono版をデプロイする前に必ず `npm run build` を実行してください
-- **デプロイ時間**: API Gateway のエンドポイントが利用可能になるまで約1分かかる場合があります
+- **Hono ビルド必須**: Hono 版をデプロイする前に必ず `npm run build` を実行してください
+- **デプロイ時間**: API Gateway のエンドポイントが利用可能になるまで約 1 分かかる場合があります
 
 ## 📋 利用可能な機能
 
 ### MCP Tools
-- `ping`: レスポンス時間テスト (100ms/1000msで交互に切り替わり)
-- `start-notification-stream`: 定期通知テスト (Hono版のみ)
+
+- `ping`: レスポンス時間テスト (100ms/1000ms で交互に切り替わり)
+- `start-notification-stream`: 定期通知テスト (Hono 版のみ)
 
 ### MCP Resources
+
 - `greeting-resource`: 静的グリーティングリソース
 
 ### MCP Prompts
+
 - `greeting-template`: パーソナライズされたグリーティングプロンプト
 
 ## 認証機能
 
 ### Bearer Token 認証
 
-MCPサーバーはBearer Token認証をサポートしています。環境変数 `MCP_AUTH_TOKEN` を設定することで認証を有効にできます。
+MCP サーバーは Bearer Token 認証をサポートしています。環境変数 `MCP_AUTH_TOKEN` を設定することで認証を有効にできます。
 
 #### 環境変数の設定
 
@@ -158,15 +164,16 @@ environment: {
 npx mcp-remote --header "Authorization:Bearer your-secret-token" http://localhost:3000/mcp
 ```
 
-Claude & Cursor設定例:
+Claude & Cursor 設定例:
 
 ```json
 {
   "example-authenticated": {
     "command": "/path/to/npx",
     "args": [
-      "mcp-remote", 
-      "--header", "Authorization:Bearer your-secret-token",
+      "mcp-remote",
+      "--header",
+      "Authorization:Bearer your-secret-token",
       "https://{{OutputValue}}.execute-api.us-east-1.amazonaws.com/dev/mcp"
     ]
   }
@@ -196,13 +203,15 @@ Claude & Cursor設定例:
 
 ### Hono → Express.js への切り替え
 
-1. CDKスタック設定を変更:
+1. CDK スタック設定を変更:
+
 ```typescript
 // lib/serverless-mcp-servers-cdk-stack.ts:33
 code: lambda.Code.fromAsset(path.join(__dirname, "../src/js/mcpserver")), // Express
 ```
 
 2. 再デプロイ:
+
 ```bash
 npm run build
 cdk deploy --region us-east-1
@@ -210,18 +219,21 @@ cdk deploy --region us-east-1
 
 ### Express.js → Hono への切り替え
 
-1. Honoサーバーをビルド:
+1. Hono サーバーをビルド:
+
 ```bash
 (cd src/ts/mcpserver && npm run build)
 ```
 
-2. CDKスタック設定を変更:
+2. CDK スタック設定を変更:
+
 ```typescript
 // lib/serverless-mcp-servers-cdk-stack.ts:33
 code: lambda.Code.fromAsset(path.join(__dirname, "../src/ts/mcpserver/dist")), // Hono
 ```
 
 3. 再デプロイ:
+
 ```bash
 npm run build
 cdk deploy --region us-east-1
@@ -229,7 +241,7 @@ cdk deploy --region us-east-1
 
 ## 🧹 クリーンアップ
 
-評価が終わったら、以下のコマンドでAWSリソースを削除してください:
+評価が終わったら、以下のコマンドで AWS リソースを削除してください:
 
 ```bash
 cdk destroy --region us-east-1
